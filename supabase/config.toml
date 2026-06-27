@@ -1,0 +1,135 @@
+# A string used to distinguish different Supabase projects on the same host. Defaults to the
+# working directory name when running `supabase init`.
+project_id = "admin-panel"
+
+[api]
+enabled = true
+# Port to use for the API URL.
+port = 54321
+# Schemas to expose in your API. Tables, views and stored procedures in this
+# schema will get API endpoints. public and graphql_public schemas are included
+# by default.
+schemas = ["public", "admin", "storage"]
+# Extra schemas to add to the search_path of every request. public is always added.
+extra_search_path = ["public", "extensions"]
+# The maximum number of rows returns from a view, table, or stored procedure.
+# Limits payload size for accidental or malicious requests.
+max_rows = 1000
+
+[db]
+# Port to use for the local database URL.
+port = 54322
+# Port used by db diff command to initialize the shadow database.
+shadow_port = 54320
+# The database major version to use. This has to be the same as your remote database's. Run `SHOW server_version;` on the
+# remote database to check.
+major_version = 15
+
+[db.pooler]
+enabled = false
+# Port to use for the local connection pooler.
+port = 54329
+
+[realtime]
+enabled = true
+# Bind realtime via either IPv4 or IPv6. (Default: IPv4)
+# ip_version = "IPv6"
+# The maximum length in bytes of HTTP request headers. (Default: 4096)
+# max_header_length = 4096
+
+[studio]
+enabled = true
+# Port to use for Supabase Studio.
+port = 54323
+# External URL of the API server that frontend connects to.
+api_url = "http://127.0.0.1"
+# OpenAI API Key to use for Supabase AI Editor in Supabase Studio.
+openai_api_key = "env(OPENAI_API_KEY)"
+
+[inbucket]
+enabled = true
+# Port to use for the email testing server.
+port = 54324
+# Uncomment to expose additional ports for testing user management APIs from outside the localhost.
+# additional_ports = [54325, 54326]
+
+[storage]
+enabled = true
+# The maximum file size allowed (e.g. "5MB", "500KB").
+file_size_limit = "50MiB"
+
+[storage.image_transformation]
+enabled = true
+# One of "ASCII", "Base64", "Base64URL", "Hex"
+# Must match the `output` Image Transformation option from the dashboard.
+# output_format = "Base64URL"
+
+[auth]
+enabled = true
+# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
+# in emails.
+site_url = "http://localhost:5173"
+# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
+additional_redirect_urls = ["https://localhost:5173"]
+# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
+jwt_expiry = 3600
+# Allow/disallow new user signups to your project.
+enable_signup = false
+# Allow/disallow anonymous sign-ins to your project.
+enable_anonymous_sign_ins = false
+
+[auth.email]
+# Allow/disallow new user signups via email to your project.
+enable_signup = false
+# If enabled, a user will be required to confirm any email change on both the old, and new email
+# addresses. If disabled, only the new email is required to confirm.
+double_confirm_changes = true
+# If enabled, users need to confirm their email address before signing in.
+# Allowed values: "none", "logo", "avatar"
+# logo_disabled = false
+# Specifies the duration (in seconds) that a confirmation link is valid for.
+confirmation_token_lifespan = 86400
+
+# Uncomment to customize SMS Provider
+# [auth.sms]
+# enable_signup = false
+# enable_confirm = true
+# template = "Your code is {{ .Code }} ."
+# [auth.sms.twilio]
+# enabled = true
+# account_sid = ""
+# message_service_sid = ""
+# auth_token = ""
+
+# Use pre-defined map of i18n codes
+# [auth.i18n]
+# enabled = false
+# phone_number = "Phone number"
+# confirm_button_label = "Confirm"
+# back_button_label = "Back"
+
+[auth.external.google]
+enabled = false
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+redirect_uri = ""
+
+[edge_runtime]
+enabled = true
+# Configure one of the supported request policies: "oneshot", "per_worker".
+# Use "oneshot" for hot reload, or "per_worker" for load balancing.
+policy = "oneshot"
+inspector_port = 8083
+
+[analytics]
+enabled = false
+port = 54327
+# Backend implementation. Known issue: setting backend = "postgres" causes
+# scheduler errors on ARM Macs. Please remove the comment once this is fixed.
+# backend = "postgres"
+[experimental]
+# Configures Postgres storage engine to use. Enable zspo for Postgres 15.5+.
+# zspo = false
+
+[functions.admin-bootstrap]
+verify_jwt = false
