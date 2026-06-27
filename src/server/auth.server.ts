@@ -1,9 +1,4 @@
-// Server-only auth helpers. This file lives under src/server/** so the
-// TanStack Start import-protection plugin guarantees it never reaches the
-// client bundle. It may only be imported from createServerFn() handlers
-// or other .server.ts files.
-
-import { getCookies } from "@tanstack/react-start/server";
+import { getCookies, setCookie } from "@tanstack/react-start/server";
 import { createServerFn } from "@tanstack/react-start";
 import { redirect } from "@tanstack/react-router";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
@@ -22,32 +17,19 @@ function getEnvOrThrow(): { url: string; key: string } {
   return { url: SUPABASE_URL, key: SUPABASE_PUBLISHABLE_KEY };
 }
 
-function getSupabaseAuthCookies(): Record<string, string> {
-  const all = getCookies();
-  const auth: Record<string, string> = {};
-  for (const [name, value] of Object.entries(all)) {
-    if (name.startsWith("sb-")) {
-      auth[name] = value;
-    }
-  }
-  return auth;
-}
-
-/**
- * Returns the current Supabase session by reading cookies via
- * @supabase/ssr. Returns null if no valid session. Safe to call only
- * from server contexts (server fns, .server.ts files).
- */
 export async function getServerSession() {
   const { url, key } = getEnvOrThrow();
-  const cookies = getSupabaseAuthCookies();
-  if (Object.keys(cookies).length === 0) return null;
+  const allCookies = getCookies();
+  const cookieEntries = Object.entries(allCookies);
+  if (cookieEntries.length === 0) return null;
+
+  const isSecure = url.startsWith("https://");
 
   try {
     const supabase = createServerClient<Database>(url, key, {
       cookies: {
         getAll() {
-          return Object.entries(cookies).map(([name, value]) => ({
+          return cookieEntries.map(([name, value]) => ({
             name,
             value,
           }));
@@ -59,7 +41,15 @@ export async function getServerSession() {
             options?: CookieOptions;
           }>,
         ) {
-          void cookiesToSet;
+          for (const { name, value, options } of cookiesToSet) {
+            setCookie(name, value, {
+              path: "/",
+              sameSite: "lax",
+              secure: isSecure,
+              httpOnly: false,
+              ...options,
+            });
+          }
         },
       },
     });
