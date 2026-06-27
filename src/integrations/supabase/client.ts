@@ -37,7 +37,7 @@ function createSupabaseBrowserClient() {
       setAll(cookiesToSet: { name: string; value: string; options?: Record<string, string | number | boolean | undefined> }[]) {
         if (typeof document === "undefined") return;
         for (const { name, value, options } of cookiesToSet) {
-          const parts: string[] = [`${encodeURIComponent(name)}=${encodeURIComponent(value)}`];
+          const parts: string[] = [`${name}=${value}`];
           parts.push(`Path=${options?.path ?? "/"}`);
           parts.push(`SameSite=${options?.sameSite ?? "Lax"}`);
           if (options?.secure ?? isSecure) parts.push("Secure");
