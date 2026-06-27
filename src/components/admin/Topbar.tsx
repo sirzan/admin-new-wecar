@@ -1,7 +1,31 @@
-import { Bell, Search, ChevronRight } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Bell, Search, ChevronRight, LogOut, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Topbar({ crumbs }: { crumbs: { label: string; to?: string }[] }) {
+  const navigate = useNavigate();
+  const { profile, signOut } = useAuth();
+  const [signingOut, setSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      await signOut();
+      await navigate({ to: "/login" });
+      toast.info("Sesión cerrada");
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  const initials =
+    ((profile?.full_name ?? profile?.email ?? "A").match(/\b\w/g) ?? [])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "A";
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/60 bg-background/70 px-6 glass-blur">
       <nav className="flex items-center gap-1.5 text-sm">
@@ -47,8 +71,40 @@ export function Topbar({ crumbs }: { crumbs: { label: string; to?: string }[] })
           <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_oklch(0.78_0.16_65)]" />
         </button>
 
-        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-amber-700 flex items-center justify-center text-sm font-semibold text-primary-foreground cursor-pointer ring-2 ring-background hover:ring-primary/40 transition">
-          A
+        <div className="group relative">
+          <button
+            className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-amber-700 flex items-center justify-center text-sm font-semibold text-primary-foreground cursor-pointer ring-2 ring-background hover:ring-primary/40 transition"
+            aria-label="Cuenta"
+            title={profile?.email ?? "Cuenta"}
+          >
+            {initials}
+          </button>
+
+          <div className="absolute right-0 top-full mt-2 w-56 origin-top-right rounded-xl border border-border bg-card/95 backdrop-blur shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+            <div className="p-3 border-b border-border">
+              <p className="text-sm font-medium text-foreground truncate">
+                {profile?.full_name ?? "Admin"}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">{profile?.email ?? ""}</p>
+              {profile?.role && (
+                <span className="mt-2 inline-flex items-center rounded-full border border-primary/30 bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                  {profile.role}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-sidebar-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {signingOut ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <LogOut className="h-4 w-4" />
+              )}
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </div>
     </header>

@@ -1,0 +1,1 @@
+-- Archivo obsoleto. El contenido fue removido para evitar conflictos con migraciones previas.

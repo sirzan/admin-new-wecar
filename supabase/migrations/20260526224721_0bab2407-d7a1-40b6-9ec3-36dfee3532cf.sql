@@ -1,0 +1,9 @@
+
+ALTER TABLE public.credit_applications
+  ADD COLUMN IF NOT EXISTS employment_type TEXT,
+  ADD COLUMN IF NOT EXISTS credit_history TEXT,
+  ADD COLUMN IF NOT EXISTS whatsapp_opt_in BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS car_id UUID,
+  ADD COLUMN IF NOT EXISTS car_brand TEXT,
+  ADD COLUMN IF NOT EXISTS car_model TEXT,
+  ADD COLUMN IF NOT EXISTS car_year INTEGER;

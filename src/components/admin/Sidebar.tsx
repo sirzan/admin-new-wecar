@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   ShieldCheck,
   Megaphone,
+  Building2,
   Car,
   Info,
   PanelBottom,
@@ -26,8 +27,13 @@ import {
   GitBranch,
   Layers,
   Sparkles,
+  LogOut,
+  Loader2,
+  CreditCard,
+  Receipt,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth, type AdminRole } from "@/hooks/useAuth";
 
 type Item = { label: string; to: string; icon: React.ElementType };
 type Group = { label: string; items: Item[]; icon: React.ElementType };
@@ -36,11 +42,14 @@ const main: Item[] = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Garantía Wecar", to: "/warranty", icon: ShieldCheck },
   { label: "Advertisements", to: "/advertisements", icon: Megaphone },
+  { label: "Financieras", to: "/financieras", icon: Building2 },
   { label: "Cars", to: "/cars", icon: Car },
   { label: "Página Nosotros", to: "/about", icon: Info },
   { label: "Configuración Footer", to: "/footer", icon: PanelBottom },
   { label: "User Reports", to: "/reports", icon: FileWarning },
   { label: "Users", to: "/users", icon: Users },
+  { label: "Subscriptions", to: "/subscriptions", icon: CreditCard },
+  { label: "Stripe Payments", to: "/stripe-payments", icon: Receipt },
 ];
 
 const groups: Group[] = [
@@ -80,13 +89,31 @@ const groups: Group[] = [
 
 export function AdminSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const { profile, signOut } = useAuth();
+  const [signingOut, setSigningOut] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({
     Settings: false,
     Configuración: false,
-    "Vehicles Features": false,
+    "Vehicles Features": true,
   });
 
   const isActive = (to: string) => pathname === to;
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      await signOut();
+      await navigate({ to: "/login" });
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  const displayName = profile?.full_name ?? profile?.email ?? "Admin Wecar";
+  const displayEmail = profile?.email ?? "—";
+  const initials = (displayName.match(/\b\w/g) ?? []).slice(0, 2).join("").toUpperCase() || "A";
+  const role = profile?.role;
 
   return (
     <aside
@@ -100,7 +127,9 @@ export function AdminSidebar() {
         </div>
         <div className="flex flex-col leading-tight">
           <span className="text-sm font-semibold text-foreground tracking-tight">Wecar</span>
-          <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Admin Panel</span>
+          <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            Admin Panel
+          </span>
         </div>
       </div>
 
@@ -131,7 +160,10 @@ export function AdminSidebar() {
                   {g.label}
                 </span>
                 <ChevronDown
-                  className={cn("h-3.5 w-3.5 transition-transform duration-200", isOpen && "rotate-180")}
+                  className={cn(
+                    "h-3.5 w-3.5 transition-transform duration-200",
+                    isOpen && "rotate-180",
+                  )}
                 />
               </button>
               <AnimatePresence initial={false}>
@@ -156,17 +188,54 @@ export function AdminSidebar() {
 
       {/* Footer user */}
       <div className="border-t border-sidebar-border p-3">
-        <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-sidebar-accent transition-colors cursor-pointer">
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-amber-700 flex items-center justify-center text-sm font-semibold text-primary-foreground">
-            A
+        <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-sidebar-accent transition-colors">
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-amber-700 flex items-center justify-center text-sm font-semibold text-primary-foreground shrink-0">
+            {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">Admin Wecar</p>
-            <p className="text-xs text-muted-foreground truncate">admin@wecar.mx</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm font-medium text-foreground truncate">{displayName}</p>
+              {role && <RoleBadge role={role} />}
+            </div>
+            <p className="text-xs text-muted-foreground truncate">{displayEmail}</p>
           </div>
+          <button
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-background/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Cerrar sesión"
+            title="Cerrar sesión"
+          >
+            {signingOut ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <LogOut className="h-4 w-4" />
+            )}
+          </button>
         </div>
       </div>
     </aside>
+  );
+}
+
+function RoleBadge({ role }: { role: AdminRole }) {
+  if (!role) return null;
+  const styles =
+    role === "superadmin"
+      ? "bg-primary/15 text-primary border-primary/30"
+      : role === "manager"
+        ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+        : "bg-muted text-muted-foreground border-border";
+  const label = role === "superadmin" ? "super" : role === "manager" ? "manager" : "viewer";
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-1.5 py-0 text-[9px] font-semibold uppercase tracking-wider",
+        styles,
+      )}
+    >
+      {label}
+    </span>
   );
 }
 

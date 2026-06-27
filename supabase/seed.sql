@@ -1,40 +1,89 @@
 -- =============================================
--- Admin Panel seed
+-- Admin Panel Seed — superadmin user + roles
 -- =============================================
--- This seed does NOT create the auth user itself (that requires the
--- service role key). Run the admin-bootstrap Edge Function once to
--- provision the first superadmin, then this file will link it.
+-- Ejecutar después de aplicar migraciones (supabase db push).
 --
--- Usage:
---   1. Deploy the Edge Function:
---        supabase functions deploy admin-bootstrap
---   2. Invoke it once:
---        curl -X POST $SUPABASE_URL/functions/v1/admin-bootstrap \
---          -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
---          -H "Content-Type: application/json" \
---          -d '{"email":"admin@wecar.mx","password":"CHANGE_ME","full_name":"Admin Wecar"}'
---   3. The user will be created in auth.users and promoted to
---      superadmin via admin.handle_new_auth_user() + this seed.
+-- Forma 1 (recomendada): Edge Function
+--   supabase functions deploy admin-bootstrap
+--   curl -X POST https://eeaprrziaukunjarzyqx.supabase.co/functions/v1/admin-bootstrap \
+--     -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+--     -H "Content-Type: application/json" \
+--     -d '{"email":"admin@wecar.mx","password":"CHANGE_ME","full_name":"Admin Wecar"}'
 --
--- Manual fallback (e.g. from Supabase Dashboard SQL editor):
---   - Create the user via Authentication → Users → Add user (confirm email).
---   - Then run the inserts below; ON CONFLICT makes the script idempotent.
+-- Forma 2: Manual desde SQL Editor del dashboard
+--   Sustituir los valores abajo y ejecutar todo el bloque.
 
--- Link existing auth users with the given email to admin schema
-insert into admin.users (id, email, full_name, is_active)
-select id, email,
-       coalesce(raw_user_meta_data ->> 'full_name', split_part(email, '@', 1)),
-       true
-from auth.users
-where email = 'admin@wecar.mx'
-on conflict (id) do update
-  set email = excluded.email,
-      full_name = coalesce(excluded.full_name, admin.users.full_name),
-      is_active = true;
+-- =============================================
+-- 1. Roles disponibles en admin.user_roles
+-- =============================================
+-- No hay una tabla de catálogo de roles; se definen por el enum:
+--   admin.app_role: 'superadmin', 'manager', 'viewer'
+--
+-- Permisos de cada rol:
+--   superadmin → acceso total a todas las secciones
+--   manager    → CRUD en contenido, no puede gestionar admins
+--   viewer     → solo lectura
 
--- Promote to superadmin
-insert into admin.user_roles (user_id, role)
-select id, 'superadmin'::admin.app_role
-from auth.users
-where email = 'admin@wecar.mx'
-on conflict (user_id, role) do nothing;
+-- =============================================
+-- 2. Crear usuario superadmin
+-- =============================================
+-- Descomentar y cambiar valores antes de ejecutar:
+-- (requiere service_role key o ser admin del proyecto)
+
+-- do $$
+-- declare
+--   _user_id uuid;
+--   _email text := 'admin@wecar.mx';
+--   _password text := 'CHANGE_ME_123'; -- mínimo 8 caracteres
+--   _full_name text := 'Admin Wecar';
+-- begin
+--   -- Crear usuario en auth.users (solo con service_role)
+--   insert into auth.users (
+--     email, encrypted_password, email_confirmed_at, raw_user_meta_data,
+--     created_at, updated_at, role
+--   )
+--   values (
+--     _email,
+--     crypt(_password, gen_salt('bf')), -- bcrypt hash
+--     now(),
+--     jsonb_build_object('full_name', _full_name),
+--     now(),
+--     now(),
+--     'authenticated'
+--   )
+--   returning id into _user_id;
+--
+--   -- Insertar perfil en admin.users
+--   insert into admin.users (id, email, full_name, is_active)
+--   values (_user_id, _email, _full_name, true)
+--   on conflict (id) do update set email = excluded.email;
+--
+--   -- Asignar rol superadmin
+--   insert into admin.user_roles (user_id, role)
+--   values (_user_id, 'superadmin'::admin.app_role)
+--   on conflict (user_id, role) do nothing;
+--
+--   raise notice 'Superadmin creado: % (%)', _email, _user_id;
+-- end $$;
+
+-- =============================================
+-- 3. Vincular usuario existente (si ya creaste
+--    el auth user desde el dashboard)
+-- =============================================
+
+-- insert into admin.users (id, email, full_name, is_active)
+-- select id, email,
+--        coalesce(raw_user_meta_data ->> 'full_name', split_part(email, '@', 1)),
+--        true
+-- from auth.users
+-- where email = 'admin@wecar.mx'
+-- on conflict (id) do update
+--   set email = excluded.email,
+--       full_name = coalesce(excluded.full_name, admin.users.full_name),
+--       is_active = true;
+--
+-- insert into admin.user_roles (user_id, role)
+-- select id, 'superadmin'::admin.app_role
+-- from auth.users
+-- where email = 'admin@wecar.mx'
+-- on conflict (user_id, role) do nothing;

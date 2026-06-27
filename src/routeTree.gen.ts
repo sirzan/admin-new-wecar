@@ -9,11 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AdminWarrantyRouteImport } from './routes/_admin/warranty'
+import { Route as AdminReportsRouteImport } from './routes/_admin/reports'
+import { Route as AdminFooterRouteImport } from './routes/_admin/footer'
 import { Route as AdminDashboardRouteImport } from './routes/_admin/dashboard'
 import { Route as AdminAdvertisementsRouteImport } from './routes/_admin/advertisements'
+import { Route as AdminAboutRouteImport } from './routes/_admin/about'
+import { Route as AdminUsersIndexRouteImport } from './routes/_admin/users/index'
+import { Route as AdminSubscriptionsIndexRouteImport } from './routes/_admin/subscriptions/index'
+import { Route as AdminStripePaymentsIndexRouteImport } from './routes/_admin/stripe-payments/index'
+import { Route as AdminPlansIndexRouteImport } from './routes/_admin/plans/index'
+import { Route as AdminFinancierasIndexRouteImport } from './routes/_admin/financieras/index'
+import { Route as AdminCarsIndexRouteImport } from './routes/_admin/cars/index'
+import { Route as AdminVehiclesVersionsRouteImport } from './routes/_admin/vehicles/versions'
+import { Route as AdminVehiclesTransmissionRouteImport } from './routes/_admin/vehicles/transmission'
+import { Route as AdminVehiclesSteeringRouteImport } from './routes/_admin/vehicles/steering'
+import { Route as AdminVehiclesModelsRouteImport } from './routes/_admin/vehicles/models'
+import { Route as AdminVehiclesFuelRouteImport } from './routes/_admin/vehicles/fuel'
+import { Route as AdminVehiclesFeaturesRouteImport } from './routes/_admin/vehicles/features'
+import { Route as AdminVehiclesBrandsRouteImport } from './routes/_admin/vehicles/brands'
+import { Route as AdminVehiclesBodiesRouteImport } from './routes/_admin/vehicles/bodies'
+import { Route as AdminSubscriptionsIdRouteImport } from './routes/_admin/subscriptions/$id'
+import { Route as AdminSettingsRolesRouteImport } from './routes/_admin/settings/roles'
+import { Route as AdminSettingsMercadolibreRouteImport } from './routes/_admin/settings/mercadolibre'
+import { Route as AdminSettingsFacebookRouteImport } from './routes/_admin/settings/facebook'
+import { Route as AdminConfigTermsRouteImport } from './routes/_admin/config/terms'
+import { Route as AdminConfigPrivacyRouteImport } from './routes/_admin/config/privacy'
+import { Route as AdminConfigContactRouteImport } from './routes/_admin/config/contact'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/_admin',
   getParentRoute: () => rootRouteImport,
@@ -22,6 +53,26 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AdminWarrantyRoute = AdminWarrantyRouteImport.update({
+  id: '/warranty',
+  path: '/warranty',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFooterRoute = AdminFooterRouteImport.update({
+  id: '/footer',
+  path: '/footer',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
@@ -33,44 +84,329 @@ const AdminAdvertisementsRoute = AdminAdvertisementsRouteImport.update({
   path: '/advertisements',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAboutRoute = AdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscriptionsIndexRoute = AdminSubscriptionsIndexRouteImport.update({
+  id: '/subscriptions/',
+  path: '/subscriptions/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStripePaymentsIndexRoute =
+  AdminStripePaymentsIndexRouteImport.update({
+    id: '/stripe-payments/',
+    path: '/stripe-payments/',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminPlansIndexRoute = AdminPlansIndexRouteImport.update({
+  id: '/plans/',
+  path: '/plans/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFinancierasIndexRoute = AdminFinancierasIndexRouteImport.update({
+  id: '/financieras/',
+  path: '/financieras/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCarsIndexRoute = AdminCarsIndexRouteImport.update({
+  id: '/cars/',
+  path: '/cars/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesVersionsRoute = AdminVehiclesVersionsRouteImport.update({
+  id: '/vehicles/versions',
+  path: '/vehicles/versions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesTransmissionRoute =
+  AdminVehiclesTransmissionRouteImport.update({
+    id: '/vehicles/transmission',
+    path: '/vehicles/transmission',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminVehiclesSteeringRoute = AdminVehiclesSteeringRouteImport.update({
+  id: '/vehicles/steering',
+  path: '/vehicles/steering',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesModelsRoute = AdminVehiclesModelsRouteImport.update({
+  id: '/vehicles/models',
+  path: '/vehicles/models',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesFuelRoute = AdminVehiclesFuelRouteImport.update({
+  id: '/vehicles/fuel',
+  path: '/vehicles/fuel',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesFeaturesRoute = AdminVehiclesFeaturesRouteImport.update({
+  id: '/vehicles/features',
+  path: '/vehicles/features',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesBrandsRoute = AdminVehiclesBrandsRouteImport.update({
+  id: '/vehicles/brands',
+  path: '/vehicles/brands',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesBodiesRoute = AdminVehiclesBodiesRouteImport.update({
+  id: '/vehicles/bodies',
+  path: '/vehicles/bodies',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscriptionsIdRoute = AdminSubscriptionsIdRouteImport.update({
+  id: '/subscriptions/$id',
+  path: '/subscriptions/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRolesRoute = AdminSettingsRolesRouteImport.update({
+  id: '/settings/roles',
+  path: '/settings/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsMercadolibreRoute =
+  AdminSettingsMercadolibreRouteImport.update({
+    id: '/settings/mercadolibre',
+    path: '/settings/mercadolibre',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminSettingsFacebookRoute = AdminSettingsFacebookRouteImport.update({
+  id: '/settings/facebook',
+  path: '/settings/facebook',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfigTermsRoute = AdminConfigTermsRouteImport.update({
+  id: '/config/terms',
+  path: '/config/terms',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfigPrivacyRoute = AdminConfigPrivacyRouteImport.update({
+  id: '/config/privacy',
+  path: '/config/privacy',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfigContactRoute = AdminConfigContactRouteImport.update({
+  id: '/config/contact',
+  path: '/config/contact',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AdminAboutRoute
   '/advertisements': typeof AdminAdvertisementsRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/footer': typeof AdminFooterRoute
+  '/reports': typeof AdminReportsRoute
+  '/warranty': typeof AdminWarrantyRoute
+  '/login': typeof AuthLoginRoute
+  '/config/contact': typeof AdminConfigContactRoute
+  '/config/privacy': typeof AdminConfigPrivacyRoute
+  '/config/terms': typeof AdminConfigTermsRoute
+  '/settings/facebook': typeof AdminSettingsFacebookRoute
+  '/settings/mercadolibre': typeof AdminSettingsMercadolibreRoute
+  '/settings/roles': typeof AdminSettingsRolesRoute
+  '/subscriptions/$id': typeof AdminSubscriptionsIdRoute
+  '/vehicles/bodies': typeof AdminVehiclesBodiesRoute
+  '/vehicles/brands': typeof AdminVehiclesBrandsRoute
+  '/vehicles/features': typeof AdminVehiclesFeaturesRoute
+  '/vehicles/fuel': typeof AdminVehiclesFuelRoute
+  '/vehicles/models': typeof AdminVehiclesModelsRoute
+  '/vehicles/steering': typeof AdminVehiclesSteeringRoute
+  '/vehicles/transmission': typeof AdminVehiclesTransmissionRoute
+  '/vehicles/versions': typeof AdminVehiclesVersionsRoute
+  '/cars/': typeof AdminCarsIndexRoute
+  '/financieras/': typeof AdminFinancierasIndexRoute
+  '/plans/': typeof AdminPlansIndexRoute
+  '/stripe-payments/': typeof AdminStripePaymentsIndexRoute
+  '/subscriptions/': typeof AdminSubscriptionsIndexRoute
+  '/users/': typeof AdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AdminAboutRoute
   '/advertisements': typeof AdminAdvertisementsRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/footer': typeof AdminFooterRoute
+  '/reports': typeof AdminReportsRoute
+  '/warranty': typeof AdminWarrantyRoute
+  '/login': typeof AuthLoginRoute
+  '/config/contact': typeof AdminConfigContactRoute
+  '/config/privacy': typeof AdminConfigPrivacyRoute
+  '/config/terms': typeof AdminConfigTermsRoute
+  '/settings/facebook': typeof AdminSettingsFacebookRoute
+  '/settings/mercadolibre': typeof AdminSettingsMercadolibreRoute
+  '/settings/roles': typeof AdminSettingsRolesRoute
+  '/subscriptions/$id': typeof AdminSubscriptionsIdRoute
+  '/vehicles/bodies': typeof AdminVehiclesBodiesRoute
+  '/vehicles/brands': typeof AdminVehiclesBrandsRoute
+  '/vehicles/features': typeof AdminVehiclesFeaturesRoute
+  '/vehicles/fuel': typeof AdminVehiclesFuelRoute
+  '/vehicles/models': typeof AdminVehiclesModelsRoute
+  '/vehicles/steering': typeof AdminVehiclesSteeringRoute
+  '/vehicles/transmission': typeof AdminVehiclesTransmissionRoute
+  '/vehicles/versions': typeof AdminVehiclesVersionsRoute
+  '/cars': typeof AdminCarsIndexRoute
+  '/financieras': typeof AdminFinancierasIndexRoute
+  '/plans': typeof AdminPlansIndexRoute
+  '/stripe-payments': typeof AdminStripePaymentsIndexRoute
+  '/subscriptions': typeof AdminSubscriptionsIndexRoute
+  '/users': typeof AdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
+  '/_auth': typeof AuthRouteWithChildren
+  '/_admin/about': typeof AdminAboutRoute
   '/_admin/advertisements': typeof AdminAdvertisementsRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
+  '/_admin/footer': typeof AdminFooterRoute
+  '/_admin/reports': typeof AdminReportsRoute
+  '/_admin/warranty': typeof AdminWarrantyRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_admin/config/contact': typeof AdminConfigContactRoute
+  '/_admin/config/privacy': typeof AdminConfigPrivacyRoute
+  '/_admin/config/terms': typeof AdminConfigTermsRoute
+  '/_admin/settings/facebook': typeof AdminSettingsFacebookRoute
+  '/_admin/settings/mercadolibre': typeof AdminSettingsMercadolibreRoute
+  '/_admin/settings/roles': typeof AdminSettingsRolesRoute
+  '/_admin/subscriptions/$id': typeof AdminSubscriptionsIdRoute
+  '/_admin/vehicles/bodies': typeof AdminVehiclesBodiesRoute
+  '/_admin/vehicles/brands': typeof AdminVehiclesBrandsRoute
+  '/_admin/vehicles/features': typeof AdminVehiclesFeaturesRoute
+  '/_admin/vehicles/fuel': typeof AdminVehiclesFuelRoute
+  '/_admin/vehicles/models': typeof AdminVehiclesModelsRoute
+  '/_admin/vehicles/steering': typeof AdminVehiclesSteeringRoute
+  '/_admin/vehicles/transmission': typeof AdminVehiclesTransmissionRoute
+  '/_admin/vehicles/versions': typeof AdminVehiclesVersionsRoute
+  '/_admin/cars/': typeof AdminCarsIndexRoute
+  '/_admin/financieras/': typeof AdminFinancierasIndexRoute
+  '/_admin/plans/': typeof AdminPlansIndexRoute
+  '/_admin/stripe-payments/': typeof AdminStripePaymentsIndexRoute
+  '/_admin/subscriptions/': typeof AdminSubscriptionsIndexRoute
+  '/_admin/users/': typeof AdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/advertisements' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/advertisements'
+    | '/dashboard'
+    | '/footer'
+    | '/reports'
+    | '/warranty'
+    | '/login'
+    | '/config/contact'
+    | '/config/privacy'
+    | '/config/terms'
+    | '/settings/facebook'
+    | '/settings/mercadolibre'
+    | '/settings/roles'
+    | '/subscriptions/$id'
+    | '/vehicles/bodies'
+    | '/vehicles/brands'
+    | '/vehicles/features'
+    | '/vehicles/fuel'
+    | '/vehicles/models'
+    | '/vehicles/steering'
+    | '/vehicles/transmission'
+    | '/vehicles/versions'
+    | '/cars/'
+    | '/financieras/'
+    | '/plans/'
+    | '/stripe-payments/'
+    | '/subscriptions/'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/advertisements' | '/dashboard'
+  to:
+    | '/'
+    | '/about'
+    | '/advertisements'
+    | '/dashboard'
+    | '/footer'
+    | '/reports'
+    | '/warranty'
+    | '/login'
+    | '/config/contact'
+    | '/config/privacy'
+    | '/config/terms'
+    | '/settings/facebook'
+    | '/settings/mercadolibre'
+    | '/settings/roles'
+    | '/subscriptions/$id'
+    | '/vehicles/bodies'
+    | '/vehicles/brands'
+    | '/vehicles/features'
+    | '/vehicles/fuel'
+    | '/vehicles/models'
+    | '/vehicles/steering'
+    | '/vehicles/transmission'
+    | '/vehicles/versions'
+    | '/cars'
+    | '/financieras'
+    | '/plans'
+    | '/stripe-payments'
+    | '/subscriptions'
+    | '/users'
   id:
     | '__root__'
     | '/'
     | '/_admin'
+    | '/_auth'
+    | '/_admin/about'
     | '/_admin/advertisements'
     | '/_admin/dashboard'
+    | '/_admin/footer'
+    | '/_admin/reports'
+    | '/_admin/warranty'
+    | '/_auth/login'
+    | '/_admin/config/contact'
+    | '/_admin/config/privacy'
+    | '/_admin/config/terms'
+    | '/_admin/settings/facebook'
+    | '/_admin/settings/mercadolibre'
+    | '/_admin/settings/roles'
+    | '/_admin/subscriptions/$id'
+    | '/_admin/vehicles/bodies'
+    | '/_admin/vehicles/brands'
+    | '/_admin/vehicles/features'
+    | '/_admin/vehicles/fuel'
+    | '/_admin/vehicles/models'
+    | '/_admin/vehicles/steering'
+    | '/_admin/vehicles/transmission'
+    | '/_admin/vehicles/versions'
+    | '/_admin/cars/'
+    | '/_admin/financieras/'
+    | '/_admin/plans/'
+    | '/_admin/stripe-payments/'
+    | '/_admin/subscriptions/'
+    | '/_admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_admin': {
       id: '/_admin'
       path: ''
@@ -84,6 +420,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_admin/warranty': {
+      id: '/_admin/warranty'
+      path: '/warranty'
+      fullPath: '/warranty'
+      preLoaderRoute: typeof AdminWarrantyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/reports': {
+      id: '/_admin/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/footer': {
+      id: '/_admin/footer'
+      path: '/footer'
+      fullPath: '/footer'
+      preLoaderRoute: typeof AdminFooterRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/_admin/dashboard': {
       id: '/_admin/dashboard'
@@ -99,24 +463,239 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdvertisementsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/about': {
+      id: '/_admin/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AdminAboutRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/users/': {
+      id: '/_admin/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/subscriptions/': {
+      id: '/_admin/subscriptions/'
+      path: '/subscriptions'
+      fullPath: '/subscriptions/'
+      preLoaderRoute: typeof AdminSubscriptionsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/stripe-payments/': {
+      id: '/_admin/stripe-payments/'
+      path: '/stripe-payments'
+      fullPath: '/stripe-payments/'
+      preLoaderRoute: typeof AdminStripePaymentsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/plans/': {
+      id: '/_admin/plans/'
+      path: '/plans'
+      fullPath: '/plans/'
+      preLoaderRoute: typeof AdminPlansIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/financieras/': {
+      id: '/_admin/financieras/'
+      path: '/financieras'
+      fullPath: '/financieras/'
+      preLoaderRoute: typeof AdminFinancierasIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/cars/': {
+      id: '/_admin/cars/'
+      path: '/cars'
+      fullPath: '/cars/'
+      preLoaderRoute: typeof AdminCarsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/versions': {
+      id: '/_admin/vehicles/versions'
+      path: '/vehicles/versions'
+      fullPath: '/vehicles/versions'
+      preLoaderRoute: typeof AdminVehiclesVersionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/transmission': {
+      id: '/_admin/vehicles/transmission'
+      path: '/vehicles/transmission'
+      fullPath: '/vehicles/transmission'
+      preLoaderRoute: typeof AdminVehiclesTransmissionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/steering': {
+      id: '/_admin/vehicles/steering'
+      path: '/vehicles/steering'
+      fullPath: '/vehicles/steering'
+      preLoaderRoute: typeof AdminVehiclesSteeringRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/models': {
+      id: '/_admin/vehicles/models'
+      path: '/vehicles/models'
+      fullPath: '/vehicles/models'
+      preLoaderRoute: typeof AdminVehiclesModelsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/fuel': {
+      id: '/_admin/vehicles/fuel'
+      path: '/vehicles/fuel'
+      fullPath: '/vehicles/fuel'
+      preLoaderRoute: typeof AdminVehiclesFuelRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/features': {
+      id: '/_admin/vehicles/features'
+      path: '/vehicles/features'
+      fullPath: '/vehicles/features'
+      preLoaderRoute: typeof AdminVehiclesFeaturesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/brands': {
+      id: '/_admin/vehicles/brands'
+      path: '/vehicles/brands'
+      fullPath: '/vehicles/brands'
+      preLoaderRoute: typeof AdminVehiclesBrandsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/vehicles/bodies': {
+      id: '/_admin/vehicles/bodies'
+      path: '/vehicles/bodies'
+      fullPath: '/vehicles/bodies'
+      preLoaderRoute: typeof AdminVehiclesBodiesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/subscriptions/$id': {
+      id: '/_admin/subscriptions/$id'
+      path: '/subscriptions/$id'
+      fullPath: '/subscriptions/$id'
+      preLoaderRoute: typeof AdminSubscriptionsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings/roles': {
+      id: '/_admin/settings/roles'
+      path: '/settings/roles'
+      fullPath: '/settings/roles'
+      preLoaderRoute: typeof AdminSettingsRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings/mercadolibre': {
+      id: '/_admin/settings/mercadolibre'
+      path: '/settings/mercadolibre'
+      fullPath: '/settings/mercadolibre'
+      preLoaderRoute: typeof AdminSettingsMercadolibreRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings/facebook': {
+      id: '/_admin/settings/facebook'
+      path: '/settings/facebook'
+      fullPath: '/settings/facebook'
+      preLoaderRoute: typeof AdminSettingsFacebookRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/config/terms': {
+      id: '/_admin/config/terms'
+      path: '/config/terms'
+      fullPath: '/config/terms'
+      preLoaderRoute: typeof AdminConfigTermsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/config/privacy': {
+      id: '/_admin/config/privacy'
+      path: '/config/privacy'
+      fullPath: '/config/privacy'
+      preLoaderRoute: typeof AdminConfigPrivacyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/config/contact': {
+      id: '/_admin/config/contact'
+      path: '/config/contact'
+      fullPath: '/config/contact'
+      preLoaderRoute: typeof AdminConfigContactRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAboutRoute: typeof AdminAboutRoute
   AdminAdvertisementsRoute: typeof AdminAdvertisementsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminFooterRoute: typeof AdminFooterRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminWarrantyRoute: typeof AdminWarrantyRoute
+  AdminConfigContactRoute: typeof AdminConfigContactRoute
+  AdminConfigPrivacyRoute: typeof AdminConfigPrivacyRoute
+  AdminConfigTermsRoute: typeof AdminConfigTermsRoute
+  AdminSettingsFacebookRoute: typeof AdminSettingsFacebookRoute
+  AdminSettingsMercadolibreRoute: typeof AdminSettingsMercadolibreRoute
+  AdminSettingsRolesRoute: typeof AdminSettingsRolesRoute
+  AdminSubscriptionsIdRoute: typeof AdminSubscriptionsIdRoute
+  AdminVehiclesBodiesRoute: typeof AdminVehiclesBodiesRoute
+  AdminVehiclesBrandsRoute: typeof AdminVehiclesBrandsRoute
+  AdminVehiclesFeaturesRoute: typeof AdminVehiclesFeaturesRoute
+  AdminVehiclesFuelRoute: typeof AdminVehiclesFuelRoute
+  AdminVehiclesModelsRoute: typeof AdminVehiclesModelsRoute
+  AdminVehiclesSteeringRoute: typeof AdminVehiclesSteeringRoute
+  AdminVehiclesTransmissionRoute: typeof AdminVehiclesTransmissionRoute
+  AdminVehiclesVersionsRoute: typeof AdminVehiclesVersionsRoute
+  AdminCarsIndexRoute: typeof AdminCarsIndexRoute
+  AdminFinancierasIndexRoute: typeof AdminFinancierasIndexRoute
+  AdminPlansIndexRoute: typeof AdminPlansIndexRoute
+  AdminStripePaymentsIndexRoute: typeof AdminStripePaymentsIndexRoute
+  AdminSubscriptionsIndexRoute: typeof AdminSubscriptionsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAboutRoute: AdminAboutRoute,
   AdminAdvertisementsRoute: AdminAdvertisementsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminFooterRoute: AdminFooterRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminWarrantyRoute: AdminWarrantyRoute,
+  AdminConfigContactRoute: AdminConfigContactRoute,
+  AdminConfigPrivacyRoute: AdminConfigPrivacyRoute,
+  AdminConfigTermsRoute: AdminConfigTermsRoute,
+  AdminSettingsFacebookRoute: AdminSettingsFacebookRoute,
+  AdminSettingsMercadolibreRoute: AdminSettingsMercadolibreRoute,
+  AdminSettingsRolesRoute: AdminSettingsRolesRoute,
+  AdminSubscriptionsIdRoute: AdminSubscriptionsIdRoute,
+  AdminVehiclesBodiesRoute: AdminVehiclesBodiesRoute,
+  AdminVehiclesBrandsRoute: AdminVehiclesBrandsRoute,
+  AdminVehiclesFeaturesRoute: AdminVehiclesFeaturesRoute,
+  AdminVehiclesFuelRoute: AdminVehiclesFuelRoute,
+  AdminVehiclesModelsRoute: AdminVehiclesModelsRoute,
+  AdminVehiclesSteeringRoute: AdminVehiclesSteeringRoute,
+  AdminVehiclesTransmissionRoute: AdminVehiclesTransmissionRoute,
+  AdminVehiclesVersionsRoute: AdminVehiclesVersionsRoute,
+  AdminCarsIndexRoute: AdminCarsIndexRoute,
+  AdminFinancierasIndexRoute: AdminFinancierasIndexRoute,
+  AdminPlansIndexRoute: AdminPlansIndexRoute,
+  AdminStripePaymentsIndexRoute: AdminStripePaymentsIndexRoute,
+  AdminSubscriptionsIndexRoute: AdminSubscriptionsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

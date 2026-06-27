@@ -46,12 +46,10 @@ api_url = "http://127.0.0.1"
 # OpenAI API Key to use for Supabase AI Editor in Supabase Studio.
 openai_api_key = "env(OPENAI_API_KEY)"
 
-[inbucket]
+[local_smtp]
 enabled = true
 # Port to use for the email testing server.
 port = 54324
-# Uncomment to expose additional ports for testing user management APIs from outside the localhost.
-# additional_ports = [54325, 54326]
 
 [storage]
 enabled = true
@@ -87,8 +85,6 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 # Allowed values: "none", "logo", "avatar"
 # logo_disabled = false
-# Specifies the duration (in seconds) that a confirmation link is valid for.
-confirmation_token_lifespan = 86400
 
 # Uncomment to customize SMS Provider
 # [auth.sms]

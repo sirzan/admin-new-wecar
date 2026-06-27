@@ -1,0 +1,20 @@
+
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS fecha_nacimiento date,
+  ADD COLUMN IF NOT EXISTS rfc text,
+  ADD COLUMN IF NOT EXISTS curp text,
+  ADD COLUMN IF NOT EXISTS calle text,
+  ADD COLUMN IF NOT EXISTS colonia text,
+  ADD COLUMN IF NOT EXISTS cp text,
+  ADD COLUMN IF NOT EXISTS alcaldia text,
+  ADD COLUMN IF NOT EXISTS pais text,
+  ADD COLUMN IF NOT EXISTS ocupacion text,
+  ADD COLUMN IF NOT EXISTS empresa text,
+  ADD COLUMN IF NOT EXISTS antiguedad text,
+  ADD COLUMN IF NOT EXISTS antiguedad_anios numeric,
+  ADD COLUMN IF NOT EXISTS tipo_trabajo text,
+  ADD COLUMN IF NOT EXISTS ingreso_mensual numeric,
+  ADD COLUMN IF NOT EXISTS deuda_mensual numeric,
+  ADD COLUMN IF NOT EXISTS banco text,
+  ADD COLUMN IF NOT EXISTS tipo_cuenta text,
+  ADD COLUMN IF NOT EXISTS enganche_disponible numeric;

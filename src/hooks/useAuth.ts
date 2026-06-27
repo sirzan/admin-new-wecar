@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { getAdminProfile } from "@/actions/get-admin-profile";
 
 export type AdminRole = "superadmin" | "manager" | "viewer";
 
@@ -35,31 +36,12 @@ async function fetchSession(): Promise<Session | null> {
   return data.session ?? null;
 }
 
-async function fetchAdminProfile(userId: string): Promise<AdminProfile | null> {
-  const { data: row, error: userErr } = await supabase
-    .from("users")
-    .select("id, email, full_name, avatar_url, is_active")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (userErr) throw userErr;
-  if (!row) return null;
-
-  const { data: roleRow, error: roleErr } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (roleErr) throw roleErr;
-
+async function fetchAdminProfile(): Promise<AdminProfile | null> {
+  const data = await getAdminProfile();
+  if (!data) return null;
   return {
-    id: row.id as string,
-    email: row.email as string,
-    full_name: (row.full_name as string | null) ?? null,
-    avatar_url: (row.avatar_url as string | null) ?? null,
-    is_active: row.is_active as boolean,
-    role: (roleRow?.role as AdminRole | null) ?? null,
+    ...data,
+    role: (data.role as AdminRole | null) ?? null,
   };
 }
 
@@ -78,7 +60,7 @@ export function useAuth(): AuthState {
 
   const profileQuery = useQuery({
     queryKey: [...PROFILE_QUERY_KEY, user?.id ?? "anon"],
-    queryFn: () => (user ? fetchAdminProfile(user.id) : Promise.resolve(null)),
+    queryFn: () => (user ? fetchAdminProfile() : Promise.resolve(null)),
     enabled: !!user,
     staleTime: 60_000,
   });
@@ -96,8 +78,7 @@ export function useAuth(): AuthState {
   const profile = profileQuery.data ?? null;
   const isAdmin = !!profile && profile.is_active && !!profile.role;
   const isSuperAdmin = isAdmin && profile.role === "superadmin";
-  const isManagerOrAbove =
-    isAdmin && (profile.role === "superadmin" || profile.role === "manager");
+  const isManagerOrAbove = isAdmin && (profile.role === "superadmin" || profile.role === "manager");
 
   const signOut = async () => {
     await supabase.auth.signOut();

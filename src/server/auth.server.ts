@@ -1,19 +1,17 @@
-// Server-side session helper.
-// Used from `beforeLoad` route guards to read the current Supabase
-// session from the request cookies. The browser client cannot be
-// called from the server, so we use the @supabase/ssr createServerClient
-// pattern that reads cookies off the incoming request.
+// Server-only auth helpers. This file lives under src/server/** so the
+// TanStack Start import-protection plugin guarantees it never reaches the
+// client bundle. It may only be imported from createServerFn() handlers
+// or other .server.ts files.
 
-import { getCookies, setCookie, deleteCookie } from "@tanstack/react-start/server";
-import { createServerClient } from "@supabase/ssr";
-import type { Session } from "@supabase/supabase-js";
+import { getCookies } from "@tanstack/react-start/server";
+import { createServerFn } from "@tanstack/react-start";
+import { redirect } from "@tanstack/react-router";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import type { Database } from "@/integrations/supabase/types";
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ?? import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_URL = process.env.SUPABASE_URL ?? import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY =
-  process.env.SUPABASE_PUBLISHABLE_KEY ??
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  process.env.SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 function getEnvOrThrow(): { url: string; key: string } {
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
@@ -24,56 +22,67 @@ function getEnvOrThrow(): { url: string; key: string } {
   return { url: SUPABASE_URL, key: SUPABASE_PUBLISHABLE_KEY };
 }
 
-export function getServerSupabase() {
-  const { url, key } = getEnvOrThrow();
-  const cookieJar = getCookies();
-
-  return createServerClient<Database>(url, key, {
-    cookies: {
-      getAll() {
-        return Object.entries(cookieJar).map(([name, value]) => ({
-          name,
-          value,
-        }));
-      },
-      setAll(cookiesToSet) {
-        for (const { name, value, options } of cookiesToSet) {
-          setCookie(name, value, options);
-        }
-      },
-    },
-  });
+function getSupabaseAuthCookies(): Record<string, string> {
+  const all = getCookies();
+  const auth: Record<string, string> = {};
+  for (const [name, value] of Object.entries(all)) {
+    if (name.startsWith("sb-")) {
+      auth[name] = value;
+    }
+  }
+  return auth;
 }
 
-export async function getServerSession(): Promise<Session | null> {
+/**
+ * Returns the current Supabase session by reading cookies via
+ * @supabase/ssr. Returns null if no valid session. Safe to call only
+ * from server contexts (server fns, .server.ts files).
+ */
+export async function getServerSession() {
+  const { url, key } = getEnvOrThrow();
+  const cookies = getSupabaseAuthCookies();
+  if (Object.keys(cookies).length === 0) return null;
+
   try {
-    const supabase = getServerSupabase();
+    const supabase = createServerClient<Database>(url, key, {
+      cookies: {
+        getAll() {
+          return Object.entries(cookies).map(([name, value]) => ({
+            name,
+            value,
+          }));
+        },
+        setAll(
+          cookiesToSet: Array<{
+            name: string;
+            value: string;
+            options?: CookieOptions;
+          }>,
+        ) {
+          void cookiesToSet;
+        },
+      },
+    });
     const { data, error } = await supabase.auth.getSession();
-    if (error) {
-      console.warn("[auth.server] getSession error:", error.message);
-      return null;
-    }
+    if (error) return null;
     return data.session ?? null;
-  } catch (err) {
-    console.warn("[auth.server] failed to construct client:", err);
+  } catch {
     return null;
   }
 }
 
-export function clearServerAuthCookies(): void {
-  const names = [
-    "sb-access-token",
-    "sb-refresh-token",
-    "supabase-auth-token",
-  ];
-  for (const name of names) {
-    try {
-      deleteCookie(name);
-    } catch {
-      // ignore
-    }
+export const requireAdminServerFn = createServerFn({ method: "GET" }).handler(async () => {
+  const session = await getServerSession();
+  if (!session) {
+    throw redirect({ to: "/login" });
   }
-}
+  return { authenticated: true as const };
+});
 
-// Suppress unused-import warning when consumers don't clear cookies yet.
-export { deleteCookie };
+export const requireAnonServerFn = createServerFn({ method: "GET" }).handler(async () => {
+  const session = await getServerSession();
+  if (session) {
+    throw redirect({ to: "/dashboard" });
+  }
+  return { anonymous: true as const };
+});
